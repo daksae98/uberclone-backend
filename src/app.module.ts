@@ -5,6 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 import { RestaurantModule } from './restaurant/restaurant.module';
+import { Restaurant } from './restaurant/entities/restaurant.entity';
 
 @Module({
   imports: [
@@ -28,8 +29,9 @@ import { RestaurantModule } from './restaurant/restaurant.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      synchronize: true,
-      logging: true,
+      synchronize: process.env.NODE_ENV !== 'prod',
+      logging: process.env.NODE_ENV !== 'prod',
+      entities: [Restaurant],
     }),
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
